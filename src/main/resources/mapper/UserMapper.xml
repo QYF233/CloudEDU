@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ndky.cloudedu.mapper.UserMapper">
+
+    <select id="getUserAll" resultType="com.ndky.cloudedu.vo.UserVo">
+        SELECT
+            user.*,
+            class.class_name,
+            class.number,
+            class.dept
+        FROM
+            user
+                INNER JOIN
+            class
+            ON
+                user.cid = class.id
+        WHERE
+            user.username LIKE concat('%','${keyword}','%')
+    </select>
+</mapper>

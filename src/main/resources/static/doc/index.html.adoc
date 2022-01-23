@@ -1,0 +1,11 @@
+= CloudEDU-smart-doc
+
+[width="100%",options="header"]
+[stripes=even]
+|====================
+|Version |  Update Time  | Status | Author |  Description
+|v2021-11-04 20:55:28|2021-11-04 20:55:28|auto|@kiko|Created by smart-doc
+|====================
+
+
+
