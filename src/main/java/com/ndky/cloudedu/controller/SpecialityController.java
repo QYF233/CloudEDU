@@ -2,15 +2,13 @@ package com.ndky.cloudedu.controller;
 
 
 import com.ndky.cloudedu.common.lang.ReturnMsg;
-import com.ndky.cloudedu.entity.Role;
+import com.ndky.cloudedu.entity.Classes;
 import com.ndky.cloudedu.entity.Speciality;
-import com.ndky.cloudedu.service.RoleService;
-import io.swagger.annotations.Api;
+import com.ndky.cloudedu.service.SpecialityService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,27 +16,26 @@ import java.util.List;
 
 /**
  * <p>
- * 后台用户角色表 前端控制器
+ *  前端控制器
  * </p>
  *
  * @author kiko
- * @since 2021-10-20
+ * @since 2022-02-05
  */
-@Api(tags = "权限管理")
 @RestController
-@RequestMapping("/role")
-public class RoleController {
+@RequestMapping("/speciality")
+public class SpecialityController {
+
     @Autowired
-    public RoleService roleService;
+    private SpecialityService specialityService;
 
-
-    @ApiOperation("获取所有角色")
+    @ApiOperation("获取所有专业")
     @GetMapping(value = "/listAll")
     @ResponseBody
     public ReturnMsg listAll() {
-        List<Role> list = roleService.list();
-        for (Role r : list) {
-            System.out.println(r);
+        List<Speciality> list = specialityService.list();
+        for (Speciality speciality : list) {
+            System.out.println(speciality);
         }
         return ReturnMsg.success(list);
     }

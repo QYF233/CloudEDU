@@ -1,7 +1,6 @@
 package com.ndky.cloudedu.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ndky.cloudedu.entity.Class;
 import com.ndky.cloudedu.entity.Room;
 import com.baomidou.mybatisplus.extension.service.IService;
 

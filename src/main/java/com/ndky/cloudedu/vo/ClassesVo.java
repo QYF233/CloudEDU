@@ -1,10 +1,13 @@
-package com.ndky.cloudedu.entity;
+package com.ndky.cloudedu.vo;
 
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -12,25 +15,20 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author kiko
- * @since 2021-10-20
+ * @since 2022-02-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="Class对象", description="")
-public class Class implements Serializable {
+@ApiModel(value="Classes对象", description="")
+public class ClassesVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "班级号")
-    private Integer id;
+    @TableId(type = IdType.AUTO)
+    private Long value;
 
     @ApiModelProperty(value = "班级名称")
-    private String className;
-
-    @ApiModelProperty(value = "人数")
-    private Integer number;
-
-    @ApiModelProperty(value = "学院")
-    private String dept;
+    private String label;
 
 }

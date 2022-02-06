@@ -2,7 +2,7 @@ package com.ndky.cloudedu.vo;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.ndky.cloudedu.entity.Class;
+import com.ndky.cloudedu.entity.Classes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

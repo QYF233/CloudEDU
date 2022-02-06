@@ -4,39 +4,36 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ndky.cloudedu.entity.Class;
-import com.ndky.cloudedu.mapper.ClassMapper;
-import com.ndky.cloudedu.service.ClassService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ndky.cloudedu.entity.Classes;
+import com.ndky.cloudedu.mapper.ClassesMapper;
+import com.ndky.cloudedu.service.ClassesService;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * <p>
- * 服务实现类
+ *  服务实现类
  * </p>
  *
  * @author kiko
- * @since 2021-10-20
+ * @since 2022-02-05
  */
 @Service
-public class ClassServiceImpl extends ServiceImpl<ClassMapper, Class> implements ClassService {
+public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> implements ClassesService {
 
     @Override
-    public Page<Class> list(String keyword, Integer pageSize, Integer pageNum) {
-        Page<Class> page = new Page<>(pageNum, pageSize);
-        QueryWrapper<Class> wrapper = new QueryWrapper<>();
-        LambdaQueryWrapper<Class> lambda = wrapper.lambda();
+    public Page<Classes> list(String keyword, Integer pageSize, Integer pageNum) {
+        Page<Classes> page = new Page<>(pageNum, pageSize);
+        QueryWrapper<Classes> wrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Classes> lambda = wrapper.lambda();
         if (StrUtil.isNotEmpty(keyword)) {
-            lambda.like(Class::getClassName, keyword);
+            lambda.like(Classes::getClassName, keyword);
         }
         return page(page, wrapper);
     }
 
     @Override
-    public boolean create(Class clazz) {
+    public boolean create(Classes clazz) {
         return save(clazz);
     }
 

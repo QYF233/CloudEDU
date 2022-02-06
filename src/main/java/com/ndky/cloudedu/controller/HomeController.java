@@ -3,10 +3,10 @@ package com.ndky.cloudedu.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ndky.cloudedu.common.lang.ReturnMsg;
-import com.ndky.cloudedu.entity.Class;
+import com.ndky.cloudedu.entity.Classes;
 import com.ndky.cloudedu.entity.Picture;
 import com.ndky.cloudedu.entity.User;
-import com.ndky.cloudedu.service.ClassService;
+import com.ndky.cloudedu.service.ClassesService;
 import com.ndky.cloudedu.service.PictureService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +36,7 @@ public class HomeController {
     PictureService pictureService;
 
     @Autowired
-    ClassService classService;
+    ClassesService classesService;
 
 
     /**

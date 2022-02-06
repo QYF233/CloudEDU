@@ -3,10 +3,10 @@ package com.ndky.cloudedu.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ndky.cloudedu.common.lang.ReturnMsg;
-import com.ndky.cloudedu.entity.Class;
+import com.ndky.cloudedu.entity.Classes;
 import com.ndky.cloudedu.entity.Room;
 import com.ndky.cloudedu.entity.RoomClass;
-import com.ndky.cloudedu.service.ClassService;
+import com.ndky.cloudedu.service.ClassesService;
 import com.ndky.cloudedu.service.RoomClassService;
 import com.ndky.cloudedu.service.RoomService;
 import io.swagger.annotations.Api;
@@ -34,14 +34,14 @@ public class RoomClassController {
     @Autowired
     RoomService roomService;
     @Autowired
-    ClassService classService;
+    ClassesService classesService;
 
     @ApiOperation("设置教室上课班级")
     @PostMapping(value = "/setRoomClass")
     @ResponseBody
     public ReturnMsg setRoomClass(@RequestParam("rid") Long rid, @RequestParam("cid") Long cid) {
         Room rItem = roomService.getById(rid);
-        Class cItem = classService.getById(cid);
+        Classes cItem = classesService.getById(cid);
         if (rItem != null && cItem != null) {
             boolean flag = roomClassService.saveOrUpdate(new RoomClass(rid, cid));
             if (flag) {

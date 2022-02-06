@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ndky.cloudedu.mapper.CollegesMapper">
+
+    <resultMap id="basicMap" type="com.ndky.cloudedu.entity.Colleges">
+        <id column="col_id" jdbcType="BIGINT" property="colId"/>
+        <result column="col_name" jdbcType="VARCHAR" property="colName"/>
+    </resultMap>
+    <resultMap id="selectMap" type="com.ndky.cloudedu.vo.CollegesVo">
+        <id column="col_id" jdbcType="BIGINT" property="value"/>
+        <result column="col_name" jdbcType="VARCHAR" property="label"/>
+        <collection property="children" javaType="java.util.ArrayList" ofType="com.ndky.cloudedu.vo.SpecialityVo"
+                    column="col_id" select="com.ndky.cloudedu.mapper.SpecialityMapper.selectAllSpecialities"/>
+    </resultMap>
+    <select id="getAllColleges" resultMap="selectMap">
+        SELECT *
+        FROM `colleges`
+    </select>
+</mapper>

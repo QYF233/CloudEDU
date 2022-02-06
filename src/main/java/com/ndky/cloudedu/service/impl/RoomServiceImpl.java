@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ndky.cloudedu.entity.Class;
 import com.ndky.cloudedu.entity.Room;
 import com.ndky.cloudedu.mapper.RoomMapper;
 import com.ndky.cloudedu.service.RoomService;

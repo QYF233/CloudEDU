@@ -1,13 +1,15 @@
 package com.ndky.cloudedu.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ndky.cloudedu.entity.Role;
 import com.ndky.cloudedu.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ndky.cloudedu.vo.UserVo;
 
+
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author kiko
@@ -43,10 +45,14 @@ public interface UserService extends IService<User> {
 
     /**
      * 获取学生及班级信息
+     *
      * @param keyword  关键词
      * @param pageSize 页面大小
      * @param pageNum  页码
      * @return 用户页面
      */
     Page<UserVo> getUserAll(String keyword, Integer pageSize, Integer pageNum);
+
+
+    Role getUserRole(Long uid);
 }

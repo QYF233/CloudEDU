@@ -48,7 +48,7 @@ public class CodeGenerator {
         GlobalConfig gc = new GlobalConfig();
         //生成路径
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "/src/main/java");
+        gc.setOutputDir(projectPath + "/src/main/java/generator");
         //作者
         gc.setAuthor("kiko");
         //创建好后打开文件夹

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ndky.cloudedu.mapper.ClassesMapper">
+
+    <resultMap id="basicMap" type="com.ndky.cloudedu.entity.Classes">
+        <id column="class_id" jdbcType="BIGINT" property="classId"/>
+        <result column="class_name" jdbcType="VARCHAR"  property="className"/>
+        <result column="class_speciality" jdbcType="BIGINT" property="classSpeciality"/>
+        <result column="teacher_id" jdbcType="BIGINT" property="teacherId"/>
+    </resultMap>
+    <resultMap id="selectMap" type="com.ndky.cloudedu.vo.ClassesVo">
+        <id column="class_id" jdbcType="BIGINT" property="value"/>
+        <result column="class_name" jdbcType="VARCHAR"  property="label"/>
+    </resultMap>
+
+    <select id="selectAllClasses" resultMap="selectMap" parameterType="java.lang.Long">
+        SELECT * FROM classes where class_speciality = #{speId}
+    </select>
+</mapper>

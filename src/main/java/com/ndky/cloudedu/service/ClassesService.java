@@ -1,20 +1,18 @@
 package com.ndky.cloudedu.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ndky.cloudedu.entity.Class;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
+import com.ndky.cloudedu.entity.Classes;
 
 /**
  * <p>
- * 服务类
+ *  服务类
  * </p>
  *
  * @author kiko
- * @since 2021-10-20
+ * @since 2022-02-05
  */
-public interface ClassService extends IService<Class> {
+public interface ClassesService extends IService<Classes> {
     /**
      * 获取公共教室
      *
@@ -27,11 +25,10 @@ public interface ClassService extends IService<Class> {
     /**
      * 分页获取角色列表
      */
-    Page<Class> list(String keyword, Integer pageSize, Integer pageNum);
+    Page<Classes> list(String keyword, Integer pageSize, Integer pageNum);
 
     /**
      * 添加角色
      */
-    boolean create(Class clazz);
-
+    boolean create(Classes clazz);
 }

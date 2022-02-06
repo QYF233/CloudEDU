@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ndky.cloudedu.entity.Role;
 import com.ndky.cloudedu.entity.User;
 import com.ndky.cloudedu.entity.UserRole;
 import com.ndky.cloudedu.mapper.RoleMapper;
@@ -20,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -91,5 +94,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Page<UserVo> page = new Page<>(pageNum, pageSize);
         return userMapper.getUserAll(page, keyword);
     }
+
+    @Override
+    public Role getUserRole(Long uid) {
+        QueryWrapper<UserRole> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid",uid);
+        UserRole userRole = userRoleService.getOne(queryWrapper);
+        Role role = roleService.getById(userRole.getRid());
+        return role;
+    }
+
 
 }
