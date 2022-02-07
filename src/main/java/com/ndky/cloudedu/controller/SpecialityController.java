@@ -5,6 +5,7 @@ import com.ndky.cloudedu.common.lang.ReturnMsg;
 import com.ndky.cloudedu.entity.Classes;
 import com.ndky.cloudedu.entity.Speciality;
 import com.ndky.cloudedu.service.SpecialityService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import java.util.List;
  * @author kiko
  * @since 2022-02-05
  */
+@Api(tags = "专业管理")
 @RestController
 @RequestMapping("/speciality")
 public class SpecialityController {

@@ -64,8 +64,7 @@ class CloudEduApplicationTests {
     }
     @Test
     void test4() {
-//        String v4IP = Util.getV4IP();
-//        System.out.println();
+        System.out.println(Util.NowTime());
         InetAddress ia = null;
         try {
             ia = ia.getLocalHost();

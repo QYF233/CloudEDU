@@ -2,12 +2,9 @@ package com.ndky.cloudedu.common.utils;
 
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -20,13 +17,14 @@ public class Util {
 
     /**
      * 生成验证码图片
-     * @param request 设置session
-     * @param response 转成图片
-     * @param captchaProducer 生成图片方法类
+     *
+     * @param request            设置session
+     * @param response           转成图片
+     * @param captchaProducer    生成图片方法类
      * @param validateSessionKey session名称
      * @throws Exception
      */
-    public static void validateCode(HttpServletRequest request, HttpServletResponse response, DefaultKaptcha captchaProducer, String validateSessionKey) throws Exception{
+    public static void validateCode(HttpServletRequest request, HttpServletResponse response, DefaultKaptcha captchaProducer, String validateSessionKey) throws Exception {
         // Set to expire far in the past.
         response.setDateHeader("Expires", 0);
         // Set standard HTTP/1.1 no-cache headers.
@@ -58,6 +56,7 @@ public class Util {
             out.close();
         }
     }
+
     public static String getIp() {
         InetAddress ia = null;
         try {
@@ -72,83 +71,9 @@ public class Util {
             return "error";
         }
     }
-    public static String getV4IP(){
-        String ip = "";
-        String chinaz = "http://ip.chinaz.com";
 
-        StringBuilder inputLine = new StringBuilder();
-        String read = "";
-        URL url = null;
-        HttpURLConnection urlConnection = null;
-        BufferedReader in = null;
-        try {
-            url = new URL(chinaz);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            in = new BufferedReader( new InputStreamReader(urlConnection.getInputStream(),"UTF-8"));
-            while((read=in.readLine())!=null){
-                inputLine.append(read+"\r\n");
-            }
-            System.out.println(inputLine.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally{
-            if(in!=null){
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-
-        Pattern p = Pattern.compile("\\<dd class\\=\"fz24\">(.*?)\\<\\/dd>");
-        Matcher m = p.matcher(inputLine.toString());
-        if(m.find()){
-            String ipstr = m.group(1);
-            ip = ipstr;
-            System.out.println(ipstr);
-        }
-        return ip;
-
-    }
-    public static String getIpAddr(HttpServletRequest request) {
-        String ipAddress = null;
-        try {
-            ipAddress = request.getHeader("x-forwarded-for");
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("Proxy-Client-IP");
-            }
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("WL-Proxy-Client-IP");
-            }
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getRemoteAddr();
-                if (ipAddress.equals("127.0.0.1")) {
-                    // 根据网卡取本机配置的IP
-                    InetAddress inet = null;
-                    try {
-                        inet = InetAddress.getLocalHost();
-                    } catch (UnknownHostException e) {
-                        e.printStackTrace();
-                    }
-                    ipAddress = inet.getHostAddress();
-                }
-            }
-            // 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-            if (ipAddress != null && ipAddress.length() > 15) { // "***.***.***.***".length()
-                // = 15
-                if (ipAddress.indexOf(",") > 0) {
-                    ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
-                }
-            }
-        } catch (Exception e) {
-            ipAddress="";
-        }
-        // ipAddress = this.getRequest().getRemoteAddr();
-
-        return ipAddress;
+    public static String NowTime(){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        return df.format(new Date());
     }
 }

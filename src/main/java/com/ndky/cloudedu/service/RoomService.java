@@ -20,4 +20,5 @@ public interface RoomService extends IService<Room> {
      */
     Page<Room> list(String keyword, Integer pageSize, Integer pageNum, Integer state);
 
+    void setStatus(int i);
 }

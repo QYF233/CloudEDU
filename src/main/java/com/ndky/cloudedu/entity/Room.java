@@ -1,6 +1,7 @@
 package com.ndky.cloudedu.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -48,20 +49,25 @@ public class Room implements Serializable {
     @ApiModelProperty(value = "教师id")
     private Long teacherId;
 
-    public Room(String name, String note, Integer state, String liveUrl, Long teacherId) {
+    @ApiModelProperty(value = "创建时间")
+    private Date createTime;
+
+    public Room(String name, String note, Integer state, String liveUrl, Long teacherId, Date createTime) {
         this.name = name;
         this.note = note;
         this.state = state;
         this.liveUrl = liveUrl;
         this.teacherId = teacherId;
+        this.createTime = createTime;
     }
 
-    public Room(Long id, String name, String note, Integer state, String liveUrl, Long teacherId) {
+    public Room(Long id, String name, String note, Integer state, String liveUrl, Long teacherId, Date createTime) {
         this.id = id;
         this.name = name;
         this.note = note;
         this.state = state;
         this.liveUrl = liveUrl;
         this.teacherId = teacherId;
+        this.createTime = createTime;
     }
 }
