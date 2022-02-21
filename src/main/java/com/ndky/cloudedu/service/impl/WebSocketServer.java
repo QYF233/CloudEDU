@@ -1,5 +1,7 @@
 package com.ndky.cloudedu.service.impl;
 
+import com.ndky.cloudedu.common.lang.ReturnMsg;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +24,6 @@ public class WebSocketServer {
 
     private static Map<String, Set<Session>> rooms = new ConcurrentHashMap<>(); //教室列表
 
-
     /**
      * 连接建立成功调用的方法
      *
@@ -41,8 +42,8 @@ public class WebSocketServer {
             // 房间已存在，直接添加用户到相应的房间
             rooms.get(roomId).add(session);
         }
-        WebSocketServer.onlineCount++;
-        log.info("有一连接进入！当前在线人数为" + onlineCount);
+//        WebSocketServer.onlineCount++;
+        log.info("有一连接进入！当前在线人数为" + rooms.get(roomId).size());
         log.info("用户名：" + session.getId());
 //        clients.put(username, this);
     }
@@ -76,19 +77,28 @@ public class WebSocketServer {
         log.error("WebSocket发生错误：" + throwable.getMessage());
     }
 
-    public static void sendMessage(String roomId, String message) {
+    public static ReturnMsg sendMessage(String roomId, String message) {
         // 向所有连接websocket的客户端发送消息
         // 可以修改为对某个客户端发消息
         System.out.println("当前roomId为：" + roomId);
-        for (Session session : rooms.get(roomId)) {
-            try {
-                session.getBasicRemote().sendText(message);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (roomId != null) {
+            for (Session session : rooms.get(roomId)) {
+                try {
+                    session.getBasicRemote().sendText(message);
+                    return ReturnMsg.success();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+        } else {
+            return ReturnMsg.failed("房间号不存在");
         }
+        return ReturnMsg.failed();
     }
 
+    public static Integer getOnlineCount(String roomId) {
+        return rooms.get(roomId).size();
+    }
     /**
      * 群发自定义消息
      */

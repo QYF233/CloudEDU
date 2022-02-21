@@ -29,7 +29,7 @@ public class WebSocketController {
     @ResponseBody
     public ReturnMsg send(@PathParam("roomId") String roomId, @PathParam("userId") String userId, @PathParam("message") String message) {
         //            WebSocketServer.sendInfo(roomId, userId, message);
-        System.out.println("2");
+        //        System.out.println("2");
         return ReturnMsg.success(message);
     }
 
@@ -42,6 +42,14 @@ public class WebSocketController {
         return ReturnMsg.success().add("socketUrl", url);
     }
 
+    @ApiOperation("获取房间连接人数")
+    @PostMapping("/getOnlineCount")
+    @ResponseBody
+    public ReturnMsg getOnlineCount(@PathParam("roomId") String roomId) {
+        Integer onlineCount = WebSocketServer.getOnlineCount(roomId);
+
+        return ReturnMsg.success().add("onlineCount", onlineCount);
+    }
 }
 
 

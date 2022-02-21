@@ -31,10 +31,7 @@ RoomMapper roomMapper;
         Page<Room> page = new Page<>(pageNum, pageSize);
         QueryWrapper<Room> wrapper = new QueryWrapper<>();
         LambdaQueryWrapper<Room> lambda = wrapper.lambda();
-        if (StrUtil.isNotEmpty(keyword)) {
-            lambda.like(Room::getName, keyword);
-            lambda.eq(Room::getState, state);
-        }
+        lambda.like(Room::getName, keyword).eq(Room::getState, state);
         return page(page, wrapper);
     }
 

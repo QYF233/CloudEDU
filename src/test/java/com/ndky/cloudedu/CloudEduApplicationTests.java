@@ -36,49 +36,5 @@ class CloudEduApplicationTests {
     @Autowired
     public SpecialityMapper specialityMapper;
 
-    @Test
-    void test() {
-        List<CollegesVo> allColleges = collegesMapper.getAllColleges();
-        for (CollegesVo colleges: allColleges){
-            System.out.println(colleges);
-        }
-
-    }
-
-    @Test
-    void test2() {
-        List<SpecialityVo> allColleges = specialityMapper.selectAllSpecialities(1L);
-        for (SpecialityVo speciality: allColleges){
-            System.out.println(speciality);
-        }
-
-    }
-
-    @Test
-    void test3() {
-        List<Classes> allColleges = classesMapper.selectAllClasses(1L);
-        for (Classes clazz: allColleges){
-            System.out.println(clazz);
-        }
-
-    }
-    @Test
-    void test4() {
-        System.out.println(Util.NowTime());
-        InetAddress ia = null;
-        try {
-            ia = ia.getLocalHost();
-            String localname = ia.getHostName();
-            String localip = ia.getHostAddress();
-            System.out.println("本机名称是：" + localname);
-            System.out.println("本机的ip是 ：" + localip);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        long l = System.nanoTime();
-        System.out.println(l);
-        long l1 = System.currentTimeMillis();
-        System.out.println(l1);
-    }
 
 }
