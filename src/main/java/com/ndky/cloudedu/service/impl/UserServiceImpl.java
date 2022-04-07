@@ -98,10 +98,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Role getUserRole(Long uid) {
         QueryWrapper<UserRole> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("uid",uid);
+        queryWrapper.eq("uid", uid);
         UserRole userRole = userRoleService.getOne(queryWrapper);
         Role role = roleService.getById(userRole.getRid());
         return role;
+    }
+
+    @Override
+    public User getUserById(Long userId) {
+        return userMapper.selectById(userId);
     }
 
 

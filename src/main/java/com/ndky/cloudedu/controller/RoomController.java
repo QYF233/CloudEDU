@@ -149,6 +149,10 @@ public class RoomController {
         if (room1.getState() == 1) {
             return ReturnMsg.success().add("flag", true).add("roomInfo", room1);
         } else {
+            if(Objects.equals(room1.getTeacherId(), uid)){
+                Room room3 = roomService.getById(roomId);
+                return ReturnMsg.success().add("flag", true).add("roomInfo", room3);
+            }
             QueryWrapper<RoomClass> query = new QueryWrapper<RoomClass>();
             query.eq("rid", roomId);
             List<RoomClass> list = roomClassService.list(query);

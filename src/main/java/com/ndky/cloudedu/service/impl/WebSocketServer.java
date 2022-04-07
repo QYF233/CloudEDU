@@ -1,28 +1,46 @@
 package com.ndky.cloudedu.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ndky.cloudedu.common.lang.ReturnMsg;
+import com.ndky.cloudedu.entity.User;
+import com.ndky.cloudedu.mapper.UserMapper;
+import com.ndky.cloudedu.service.UserService;
+import com.ndky.cloudedu.vo.MsgVo;
 import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint("/websocket/{roomId}")
+@ServerEndpoint("/websocket/{roomId}/{uid}")
 @Slf4j
 @Component
 public class WebSocketServer {
-    //静态变量，用来记录当前在线连接数。设计为安全的
-    private static int onlineCount = 0;
+
     //concurrentHashMap分段锁，用来存放每个客户端对应的Websocket对象。
 
-    private static Map<String, Set<Session>> rooms = new ConcurrentHashMap<>(); //教室列表
+    /**
+     * 房间号 -> 组成员信息
+     */
+    private static ConcurrentHashMap<String, List<Session>> rooms = new ConcurrentHashMap<>();
+    /**
+     * 房间号 -> 在线人数
+     */
+    private static ConcurrentHashMap<String, Set<String>> onlineUserMap = new ConcurrentHashMap<>();
+
+    private static UserService userService; //静态注入
+
+    @Autowired  //手动set
+    public void setUserService(UserService userService) {
+        WebSocketServer.userService = userService;
+    }
 
     /**
      * 连接建立成功调用的方法
@@ -31,33 +49,31 @@ public class WebSocketServer {
      * @param session
      */
     @OnOpen
-    public void onOpen(@PathParam("roomId") String roomId, Session session) {
-        if (!rooms.containsKey(roomId)) {
-            // 创建房间不存在时，创建房间
-            Set<Session> room = new HashSet<>();
-            // 添加用户
-            room.add(session);
-            rooms.put(roomId, room);
-        } else {
-            // 房间已存在，直接添加用户到相应的房间
-            rooms.get(roomId).add(session);
-        }
-//        WebSocketServer.onlineCount++;
-        log.info("有一连接进入！当前在线人数为" + rooms.get(roomId).size());
-        log.info("用户名：" + session.getId());
-//        clients.put(username, this);
+    public void onOpen(@PathParam("roomId") String roomId, @PathParam("uid") String uid, Session session) {
+        List<Session> sessionList = rooms.computeIfAbsent(roomId, k -> new ArrayList<>());
+        System.out.println("open");
+        Set<String> onlineUserList = onlineUserMap.computeIfAbsent(roomId, k -> new HashSet<>());
+        onlineUserList.add(uid);
+        sessionList.add(session);
+        User user = userService.getUserById(Long.valueOf(uid));
+        // 发送上线通知
+        onMessage(roomId, uid, user.getUsername() + "进入教室");
+//        sendInfo(roomId, uid, onlineUserList.size(), userById.getUsername() + "进入教室");
     }
 
     /**
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose(@PathParam("roomId") String roomId, Session session) {
-//        clients.remove(username);
-        rooms.get(roomId).remove(session);
-        WebSocketServer.onlineCount--;
-        log.info("有一连接关闭！当前在线人数为" + onlineCount);
-
+    public void onClose(@PathParam("roomId") String roomId, @PathParam("uid") String uid, Session session) {
+        List<Session> sessionList = rooms.get(roomId);
+        sessionList.remove(session);
+        Set<String> onlineUserList = onlineUserMap.get(roomId);
+        onlineUserList.remove(uid);
+        User user = userService.getUserById(Long.valueOf(uid));
+        // 发送离线通知
+        onMessage(roomId, uid, user.getUsername() + "离开教室");
+        //        sendInfo(roomId, uid, onlineUserList.size(), "");
     }
 
     /**
@@ -66,10 +82,24 @@ public class WebSocketServer {
      * @param message
      */
     @OnMessage
-    public void onMessage(@PathParam("roomId") String roomId, String message, Session session) {
-        System.out.println("收到客户端的消息" + message);
-
-        sendMessage(roomId, message);
+    public void onMessage(@PathParam("roomId") String roomId, @PathParam("uid") String uid, String message) {
+        List<Session> sessionList = rooms.get(roomId);
+        Set<String> onlineUserList = onlineUserMap.get(roomId);
+        // 先一个群组内的成员发送消息
+        sessionList.forEach(item -> {
+            try {
+                // json字符串转对象
+//                MsgVo msg = JSONObject.parseObject(message, MsgVo.class);
+                MsgVo msg = new MsgVo();
+                msg.setMsg(message);
+                msg.setCount(onlineUserList.size());
+//                 json对象转字符串
+                String text = JSONObject.toJSONString(msg);
+                item.getBasicRemote().sendText(text);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @OnError
@@ -78,41 +108,45 @@ public class WebSocketServer {
     }
 
     public static ReturnMsg sendMessage(String roomId, String message) {
-        // 向所有连接websocket的客户端发送消息
-        // 可以修改为对某个客户端发消息
-        System.out.println("当前roomId为：" + roomId);
         if (roomId != null) {
-            for (Session session : rooms.get(roomId)) {
-                try {
-                    session.getBasicRemote().sendText(message);
-                    return ReturnMsg.success();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            List<Session> sessionList = rooms.get(roomId);
+            Set<String> onlineUserList = onlineUserMap.get(roomId);
+            // 先一个群组内的成员发送消息
+            if (sessionList != null && sessionList.size() > 0) {
+                sessionList.forEach(item -> {
+                    synchronized (item) {
+                        try {
+                            // json字符串转对象
+                            MsgVo msg = new MsgVo();
+                            msg.setMsg(message);
+                            msg.setCount(onlineUserList.size());
+                            // json对象转字符串
+                            String text = JSONObject.toJSONString(msg);
+                            item.getBasicRemote().sendText(text);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                return ReturnMsg.success("群发成功！");
             }
+            return ReturnMsg.failed("房间号不存在" + sessionList);
         } else {
-            return ReturnMsg.failed("房间号不存在");
+            return ReturnMsg.failed();
         }
-        return ReturnMsg.failed();
+
     }
 
     public static Integer getOnlineCount(String roomId) {
-        return rooms.get(roomId).size();
+        Set<String> onlineUserList = onlineUserMap.get(roomId);
+        return onlineUserList.size();
     }
+
     /**
      * 群发自定义消息
      */
-//    public static void sendInfo(String roomId, String userId, String message) throws IOException {
-//
-//        for (WebSocketServer item : rooms.get(roomId).values()) {
-//            //这里可以设定只推送给这个sid的，为null则全部推送
-//            if (userId == null) {
-//                item.session.getAsyncRemote().sendText(message);
-//            } else if (item.userId.equals(userId)) {
-//                item.session.getAsyncRemote().sendText(message);
-//            }
-//            log.info("推送消息到窗口" + userId + "，推送内容:" + message);
-//        }
-//    }
+    public void sendInfo(String roomId, String uid, Integer onlineSum, String info) {
+        onMessage(roomId, uid, info);
+    }
 
 }

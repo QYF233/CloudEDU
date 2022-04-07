@@ -55,4 +55,6 @@ public interface UserService extends IService<User> {
 
 
     Role getUserRole(Long uid);
+
+    User getUserById(Long userId);
 }

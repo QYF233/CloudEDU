@@ -20,8 +20,7 @@ public class WebSocketController {
     @PostMapping("/sendAll")
     @ResponseBody
     public ReturnMsg sendAll(@PathParam("roomId") String roomId, @PathParam("message") String message) {
-        WebSocketServer.sendMessage(roomId, message);
-        return ReturnMsg.success("这是websocket群发消息");
+        return WebSocketServer.sendMessage(roomId, message);
     }
 
     @ApiOperation("群发自定义消息")
@@ -36,9 +35,9 @@ public class WebSocketController {
     @ApiOperation("获取websocket连接地址")
     @PostMapping("/getWebSocketUrl")
     @ResponseBody
-    public ReturnMsg getWebSocketUrl(@PathParam("roomId") String roomId) {
+    public ReturnMsg getWebSocketUrl(@PathParam("roomId") String roomId, @PathParam("uid") String uid) {
         String ip = Util.getIp();
-        String url = "ws://" + ip + ":8088/websocket/" + roomId;
+        String url = "ws://" + ip + ":8088/websocket/" + roomId + "/" + uid;
         return ReturnMsg.success().add("socketUrl", url);
     }
 
